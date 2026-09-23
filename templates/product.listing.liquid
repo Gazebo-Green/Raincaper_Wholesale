@@ -23,33 +23,7 @@ templates/product.listing.liquid
 <template data-html="listing">
 
   <div class="product-index-inner">
-    {% if product.available %}
-      {% for col in product.collections %}
-        {% if col.handle == 'new' %}
-          <div class="new icn {{ settings.icon_style }}">{{ 'products.general.new' | t }}</div><!-- /.new.icn -->
-        {% endif %}
-      {% endfor %}
-      {% if product.price < product.compare_at_price %}
-        <div class="sale-item sale-item--{{ settings.sale_items }} icn {{ settings.icon_style }}">
-          {% case settings.sale_items %}
-            {% when 'percentage' %}
-              {% assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price %}
-              {% assign discount = discount | round | append: '%' %}
-              {{ 'products.general.savings' | t: savings: discount }}
-            {% when 'amount' %}
-              {% assign discount = product.compare_at_price | minus: product.price | money %}
-              {{ 'products.general.savings' | t: savings: discount }}
-            {% when 'icon' %}
-              {{ 'products.general.sale' | t }}
-          {% endcase %}
-        </div><!-- /.sale-item.icn -->
-      {% endif %}
-      {% if product.template_suffix == 'pre-order' %}
-        <div class="pre-order icn {{ settings.icon_style }}">{{ 'products.product.pre_order' | t }}</div>
-      {% endif %}
-    {% else %}
-      <div class="so icn {{ settings.icon_style }}">{{ 'products.general.sold' | t }}</div><!-- /.so.icn -->
-    {% endif %}
+    {%- render 'rc-product-badges', product: product -%}
   </div><!-- /.product-index-inner -->
 
   <div class="js-product-image animated prod-image image_{{ aspect_ratio }}">

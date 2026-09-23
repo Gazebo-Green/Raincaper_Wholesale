@@ -15078,3 +15078,43 @@ iframe[src*="cinetica.io"] {
 .mobile-menu__block a svg g {
     fill: #fff;
 }
+/* RainCaper badge stack (rc-product-badges.liquid): NEW + SOLD OUT sit together top-right without overlapping */
+.product-index-inner .rc-badge-stack {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.product-index-inner .rc-badge-stack .icn,
+.product-index-inner .rc-badge-stack .new.icn.rectangle_icon {
+  position: static;
+  top: auto;
+  right: auto;
+}
+
+/* Sold out: outlined pill to match NEW / SALE / Preorder, replacing the solid black block */
+.so.icn.rectangle_icon {
+  background-color: #ffffff !important;
+  color: #6b6b6b !important;
+  border: 1px solid #9a9a9a;
+  border-radius: 9999px;
+  padding: 0.25em 0.6em;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  display: inline-block;
+}
+@media (max-width: 767px) {
+  .so.icn.rectangle_icon { font-size: 12px; }
+}
+
+/* PDP NEW badge above the product title */
+.rc-pdp-badges { margin: 0 0 8px; }
+.rc-pdp-badges .icn {
+  position: static;
+  display: inline-block;
+}

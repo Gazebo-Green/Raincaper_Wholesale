@@ -121,6 +121,19 @@ endif
                 {{ 'Next >' | link_to: collection.next_product.url, 'Next product' }}
               {% endif %}
             </div>
+            {%- liquid
+              assign rc_pdp_new = false
+              for rc_tag in product.tags
+                assign rc_tag_down = rc_tag | strip | downcase
+                if rc_tag_down == 'new'
+                  assign rc_pdp_new = true
+                  break
+                endif
+              endfor
+            -%}
+            {%- if rc_pdp_new -%}
+              <div class="rc-pdp-badges"><span class="new icn {{ settings.icon_style }}">{{ 'products.general.new' | t }}</span></div>
+            {%- endif -%}
             <h1 class="product__section-title product-title">{{ product.title }}</h1>
 
             {% render 'product-price', variant: current_variant, product: product %}
