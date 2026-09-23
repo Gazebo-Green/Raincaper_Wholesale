@@ -14,41 +14,7 @@
 -%}
 
 <div class="product-index-inner">
-  {% if product.available %}
-    {% for col in product.collections %}
-      {% if col.handle == 'new' or  col.handle == 'whats-new' %}
-        <div class="new icn {{ settings.icon_style }}">{{ 'products.general.new' | t }}</div>
-      {% endif %}
-    {% endfor %}
-    {% if product.price < product.compare_at_price %}
-      <div class="sale-item sale-item--{{ settings.sale_items }} icn {{ settings.icon_style }}">
-        {% case settings.sale_items %}
-          {% when 'percentage' %}
-            {% if product.price_varies or product.compare_at_price_varies %}
-              {{ 'products.general.sale' | t }}
-            {% else %}
-              {% assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price %}
-              {% assign discount = discount | round | append: '%' %}
-              {{ 'products.general.savings' | t: savings: discount }}
-            {% endif %}
-          {% when 'amount' %}
-            {% if product.price_varies or product.compare_at_price_varies %}
-              {{ 'products.general.sale' | t }}
-            {% else %}
-              {% assign discount = product.compare_at_price | minus: product.price | money %}
-              {{ 'products.general.savings' | t: savings: discount }}
-            {% endif %}
-          {% when 'icon' %}
-            {{ 'products.general.sale' | t }}
-        {% endcase %}
-      </div><!-- /.sale-item -->
-    {% endif %}
-    {% if product.template_suffix == 'pre-order' %}
-      <div class="pre-order icn {{ settings.icon_style }}">{{ 'products.product.pre_order' | t }}</div>
-    {% endif %}
-  {% else %}
-    <div class="so icn {{ settings.icon_style }}">{{ 'products.general.sold' | t }}</div>
-  {% endif %}
+  {%- render 'rc-product-badges', product: product -%}
 </div>
 
 <div class="js-product-image animated prod-image image_{{ aspect_ratio }}">

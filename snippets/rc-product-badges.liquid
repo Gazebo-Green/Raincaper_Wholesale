@@ -1,0 +1,56 @@
+{%- comment -%}
+  RainCaper badge stack for product cards (collection grid, search, recs, quick view).
+  - NEW: driven by the product tag "New" (any case), not by collection membership.
+    Shows whether or not the item is in stock.
+  - SOLD OUT: only when Shopify says the product can't be bought (every variant at 0
+    and set to stop selling). Pre-order items are set to keep selling, so they never
+    get this badge; the pre-order app adds its own badge.
+  - SALE stays top-left as before.
+{%- endcomment -%}
+{%- liquid
+  assign rc_is_new = false
+  for rc_tag in product.tags
+    assign rc_tag_down = rc_tag | strip | downcase
+    if rc_tag_down == 'new'
+      assign rc_is_new = true
+      break
+    endif
+  endfor
+-%}
+{%- if product.available and product.price < product.compare_at_price -%}
+  <div class="sale-item sale-item--{{ settings.sale_items }} icn {{ settings.icon_style }}">
+    {%- case settings.sale_items -%}
+      {%- when 'percentage' -%}
+        {%- if product.price_varies or product.compare_at_price_varies -%}
+          {{ 'products.general.sale' | t }}
+        {%- else -%}
+          {%- assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price -%}
+          {%- assign discount = discount | round | append: '%' -%}
+          {{ 'products.general.savings' | t: savings: discount }}
+        {%- endif -%}
+      {%- when 'amount' -%}
+        {%- if product.price_varies or product.compare_at_price_varies -%}
+          {{ 'products.general.sale' | t }}
+        {%- else -%}
+          {%- assign discount = product.compare_at_price | minus: product.price | money -%}
+          {{ 'products.general.savings' | t: savings: discount }}
+        {%- endif -%}
+      {%- when 'icon' -%}
+        {{ 'products.general.sale' | t }}
+    {%- endcase -%}
+  </div>
+{%- endif -%}
+{%- if rc_is_new or product.available == false or product.template_suffix == 'pre-order' -%}
+  <div class="rc-badge-stack">
+    {%- if rc_is_new -%}
+      <div class="new icn {{ settings.icon_style }}">{{ 'products.general.new' | t }}</div>
+    {%- endif -%}
+    {%- if product.available -%}
+      {%- if product.template_suffix == 'pre-order' -%}
+        <div class="pre-order icn {{ settings.icon_style }}">{{ 'products.product.pre_order' | t }}</div>
+      {%- endif -%}
+    {%- else -%}
+      <div class="so icn {{ settings.icon_style }}">{{ 'products.general.sold' | t }}</div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
